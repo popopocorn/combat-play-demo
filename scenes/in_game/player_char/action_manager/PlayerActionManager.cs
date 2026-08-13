@@ -28,8 +28,8 @@ public partial class PlayerActionManager : Node2D
     [Export] HurtBox_Player Spin { get; set; }
 
     [Export] Area2D PickUpArea { get; set; }
-    [Export] Node2D CurrentHandPosition { get; set; }
-    [Export] Node2D Hand { get; set; }
+    [Export] Node2D HoldingItemPosition { get; set; }
+    [Export] Node2D NodeToFlip { get; set; }
 
     private HurtBox_Player CurrentAction;
 
@@ -162,7 +162,7 @@ public partial class PlayerActionManager : Node2D
             CurrentAction.ProcessHurtBox();
         }
 
-        Hand.Scale = new Vector2(-FSM.FacingDirection, 1.0f);
+        NodeToFlip.Scale = new Vector2(FSM.FacingDirection, 1.0f);
     }
 
 
@@ -181,9 +181,9 @@ public partial class PlayerActionManager : Node2D
     {
         IsHoldingItem = true;
         HoldingItem = item;
-        HoldingItem.Reparent(CurrentHandPosition, true);
+        HoldingItem.Reparent(HoldingItemPosition, true);
         HoldingItem.PickUp();
-        HoldingItem.GlobalPosition = CurrentHandPosition.GlobalPosition;
+        HoldingItem.GlobalPosition = HoldingItemPosition.GlobalPosition;
     }
 
     public void ReleaseItem()

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 
 public partial class Fall : PlayerState
 {
+    [Export] private RayCast2D LedgeRay { get; set; }
     List<StringName> groundedStates = new List<StringName>
     {
         PlayerStateNames.Idle,
@@ -38,9 +39,21 @@ public partial class Fall : PlayerState
     
     public override void CheckIfSwitchState(double delta)
     {
+        GD.Print($"{FSM.Player.GetWallNormal()}, {FSM.InputAxis_X}");
         if (FSM.Player.IsOnFloor())
         {
             this.SwitchStateToIdleOrWalk();
+        }
+        else if (LedgeRay.IsColliding() && LedgeRay.GetCollisionNormal().IsEqualApprox(Vector2.Up))
+        {
+            if (FSM.FacingDirection == FSM.InputAxis_X)
+            {
+                EmitSignalStateSwitchRequested(PlayerStateNames.LedgeGrab);
+            }
+        }
+        else if (FSM.Player.IsOnWall() && FSM.Player.GetWallNormal().IsEqualApprox(new Vector2(-FSM.InputAxis_X, 0)) && FSM.PlayerVelocity.Y > 0)
+        {
+            EmitSignalStateSwitchRequested(PlayerStateNames.WallSlipper);
         }
     }
 

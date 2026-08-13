@@ -17,9 +17,12 @@
 [ext_resource type="Script" uid="uid://c8xhe33kqsadt" path="res://scenes/in_game/player_char/fsm/states/Spin.cs" id="13_l6axq"]
 [ext_resource type="Script" uid="uid://bj05xm1sgp024" path="res://scenes/in_game/player_char/action_manager/actions/Bash.cs" id="14_r600y"]
 [ext_resource type="Script" uid="uid://d0t7vwewe8hd3" path="res://scenes/in_game/player_char/fsm/states/Bash.cs" id="14_srw78"]
+[ext_resource type="Script" uid="uid://8xbh4ophlvrv" path="res://scenes/in_game/player_char/fsm/states/LedgeGrab.cs" id="15_5iav4"]
 [ext_resource type="Script" uid="uid://chpc5y5bixgcs" path="res://scenes/in_game/player_char/action_manager/actions/Spin.cs" id="15_lvmcp"]
 [ext_resource type="Texture2D" uid="uid://5ap2mcuts40r" path="res://resources/vfx/player/slash_vfx_temp.png" id="15_stv0n"]
+[ext_resource type="Script" uid="uid://c1jd07drqp365" path="res://scenes/in_game/player_char/fsm/states/WallSlipper.cs" id="16_qngxf"]
 [ext_resource type="Texture2D" uid="uid://b6aawcptf282t" path="res://resources/vfx/player/bash_vfx_temp.png" id="17_stv0n"]
+[ext_resource type="Script" uid="uid://e6ea2a4hyk8x" path="res://scenes/in_game/player_char/fsm/states/WallJump.cs" id="17_yk00u"]
 [ext_resource type="Texture2D" uid="uid://xxsxyi5wcb1e" path="res://resources/vfx/player/spin_vfx_temp.png" id="19_kbw3p"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qetm4"]
@@ -343,8 +346,9 @@ script = ExtResource("4_sja5d")
 [node name="Walk" type="Node" parent="FSM" unique_id=537438652]
 script = ExtResource("4_m6kff")
 
-[node name="Fall" type="Node" parent="FSM" unique_id=1969233970]
+[node name="Fall" type="Node" parent="FSM" unique_id=1969233970 node_paths=PackedStringArray("LedgeRay")]
 script = ExtResource("6_iaa7s")
+LedgeRay = NodePath("../../ActionManager/NodeToFlipX/RayCast2D")
 
 [node name="Jump" type="Node" parent="FSM" unique_id=1541206462 node_paths=PackedStringArray("JumpDuration")]
 script = ExtResource("7_sja5d")
@@ -392,12 +396,12 @@ process_callback = 0
 wait_time = 0.4
 one_shot = true
 
-[node name="Crouch" type="Node" parent="FSM" unique_id=143432291 node_paths=PackedStringArray("UpperCollision", "UpperHandPosition", "LowerHandPosition", "Hand")]
+[node name="Crouch" type="Node" parent="FSM" unique_id=143432291 node_paths=PackedStringArray("UpperCollision", "UpperHandPosition", "LowerHandPosition", "HoldingItemPosition")]
 script = ExtResource("12_stv0n")
 UpperCollision = NodePath("../../UpperCollision")
-UpperHandPosition = NodePath("../../ActionManager/PlayerHand/UpperHandPosition")
-LowerHandPosition = NodePath("../../ActionManager/PlayerHand/LowerHandPosition")
-Hand = NodePath("../../ActionManager/PlayerHand/CurrentHandPosition")
+UpperHandPosition = NodePath("../../ActionManager/NodeToFlipX/UpperHandPosition")
+LowerHandPosition = NodePath("../../ActionManager/NodeToFlipX/LowerHandPosition")
+HoldingItemPosition = NodePath("../../ActionManager/NodeToFlipX/HoldingItemPosition")
 CanExecuteAction = false
 
 [node name="Spin" type="Node" parent="FSM" unique_id=1942671112 node_paths=PackedStringArray("SpinDuration")]
@@ -419,7 +423,35 @@ process_callback = 0
 wait_time = 0.5
 one_shot = true
 
-[node name="ActionManager" type="Node2D" parent="." unique_id=274473084 node_paths=PackedStringArray("Player", "FSM", "AfterCastDelayTimer", "Slash", "Bash", "Spin", "PickUpArea", "CurrentHandPosition", "Hand")]
+[node name="LedgeGrab" type="Node" parent="FSM" unique_id=1321947757 node_paths=PackedStringArray("LedgeGrabDuration", "LedgeRay")]
+script = ExtResource("15_5iav4")
+LedgeGrabDuration = NodePath("LedgeGrabDuration")
+LedgeRay = NodePath("../../ActionManager/NodeToFlipX/RayCast2D")
+
+[node name="LedgeGrabDuration" type="Timer" parent="FSM/LedgeGrab" unique_id=640386201]
+process_callback = 0
+wait_time = 0.3
+one_shot = true
+
+[node name="WallSlipper" type="Node" parent="FSM" unique_id=158506593]
+script = ExtResource("16_qngxf")
+
+[node name="WallJump" type="Node" parent="FSM" unique_id=2118525034 node_paths=PackedStringArray("WallJumpDuration", "ForceWallJumpDuration")]
+script = ExtResource("17_yk00u")
+WallJumpDuration = NodePath("WallJumpDuration")
+ForceWallJumpDuration = NodePath("ForceWallJumpDuration")
+
+[node name="ForceWallJumpDuration" type="Timer" parent="FSM/WallJump" unique_id=155184594]
+process_callback = 0
+wait_time = 0.25
+one_shot = true
+
+[node name="WallJumpDuration" type="Timer" parent="FSM/WallJump" unique_id=136219830]
+process_callback = 0
+wait_time = 0.4
+one_shot = true
+
+[node name="ActionManager" type="Node2D" parent="." unique_id=274473084 node_paths=PackedStringArray("Player", "FSM", "AfterCastDelayTimer", "Slash", "Bash", "Spin", "PickUpArea", "HoldingItemPosition", "NodeToFlip")]
 script = ExtResource("12_qetm4")
 Player = NodePath("..")
 FSM = NodePath("../FSM")
@@ -427,9 +459,9 @@ AfterCastDelayTimer = NodePath("AfterCastDelay")
 Slash = NodePath("Slash")
 Bash = NodePath("Parry")
 Spin = NodePath("Spin")
-PickUpArea = NodePath("PlayerHand/PickUp")
-CurrentHandPosition = NodePath("PlayerHand/CurrentHandPosition")
-Hand = NodePath("PlayerHand")
+PickUpArea = NodePath("NodeToFlipX/PickUp")
+HoldingItemPosition = NodePath("NodeToFlipX/HoldingItemPosition")
+NodeToFlip = NodePath("NodeToFlipX")
 
 [node name="AfterCastDelay" type="Timer" parent="ActionManager" unique_id=143292579]
 process_callback = 0
@@ -518,25 +550,30 @@ texture = ExtResource("19_kbw3p")
 hframes = 4
 frame = 3
 
-[node name="PlayerHand" type="Node2D" parent="ActionManager" unique_id=42032408]
+[node name="NodeToFlipX" type="Node2D" parent="ActionManager" unique_id=42032408]
 
-[node name="UpperHandPosition" type="Node2D" parent="ActionManager/PlayerHand" unique_id=1275858141]
-position = Vector2(-33, 1)
+[node name="UpperHandPosition" type="Node2D" parent="ActionManager/NodeToFlipX" unique_id=1275858141]
+position = Vector2(37, 1)
 
-[node name="LowerHandPosition" type="Node2D" parent="ActionManager/PlayerHand" unique_id=56848561]
-position = Vector2(-78.94635, 38.157074)
+[node name="LowerHandPosition" type="Node2D" parent="ActionManager/NodeToFlipX" unique_id=56848561]
+position = Vector2(60, 38.157074)
 
-[node name="CurrentHandPosition" type="Node2D" parent="ActionManager/PlayerHand" unique_id=1611371597]
-position = Vector2(-111.94635, 39.157074)
+[node name="HoldingItemPosition" type="Node2D" parent="ActionManager/NodeToFlipX" unique_id=1611371597]
+position = Vector2(72, 39.157074)
 
-[node name="PickUp" type="Area2D" parent="ActionManager/PlayerHand" unique_id=317320928]
+[node name="PickUp" type="Area2D" parent="ActionManager/NodeToFlipX" unique_id=317320928]
 collision_layer = 0
 collision_mask = 16
 monitorable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ActionManager/PlayerHand/PickUp" unique_id=405321703]
-position = Vector2(-50, 40)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ActionManager/NodeToFlipX/PickUp" unique_id=405321703]
+position = Vector2(56, 40)
 shape = SubResource("RectangleShape2D_bx8n8")
+
+[node name="RayCast2D" type="RayCast2D" parent="ActionManager/NodeToFlipX" unique_id=1596109903]
+position = Vector2(27.356445, -50.94745)
+target_position = Vector2(21.643555, 47.94745)
+collision_mask = 256
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=419671816]
 custom_minimum_size = Vector2(64, 128)
@@ -581,4 +618,7 @@ metadata/_edit_use_anchors_ = true
 [connection signal="timeout" from="FSM/SprintJump/JumpDuration" to="FSM/SprintJump" method="_on_jump_duration_timeout"]
 [connection signal="timeout" from="FSM/Spin/SpinDuration" to="FSM/Spin" method="_on_spin_duration_timeout"]
 [connection signal="timeout" from="FSM/Bash/BashDuration" to="FSM/Bash" method="_on_bash_duration_timeout"]
+[connection signal="timeout" from="FSM/LedgeGrab/LedgeGrabDuration" to="FSM/LedgeGrab" method="_on_ledge_grab_duration_timeout"]
+[connection signal="timeout" from="FSM/WallJump/ForceWallJumpDuration" to="FSM/WallJump" method="_on_force_wall_jump_duration_timeout"]
+[connection signal="timeout" from="FSM/WallJump/WallJumpDuration" to="FSM/WallJump" method="_on_wall_jump_duration_timeout"]
 [connection signal="timeout" from="ActionManager/AfterCastDelay" to="ActionManager" method="_on_after_cast_delay_timeout"]

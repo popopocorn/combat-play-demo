@@ -9,11 +9,11 @@ public partial class Crouch : PlayerState
     [Export] private CollisionShape2D UpperCollision { get; set; }
     [Export] private Node2D UpperHandPosition { get; set; }
     [Export] private Node2D LowerHandPosition { get; set; }
-    [Export] private Node2D Hand { get; set; }
+    [Export] private Node2D HoldingItemPosition { get; set; }
 
     public override void _Ready()
     {
-        Hand.GlobalPosition = UpperCollision.GlobalPosition;
+        HoldingItemPosition.GlobalPosition = UpperCollision.GlobalPosition;
 
         base._Ready();
     }
@@ -22,13 +22,13 @@ public partial class Crouch : PlayerState
     public override void Enter()
     {
         UpperCollision.Disabled = true;
-        Hand.GlobalPosition = LowerHandPosition.GlobalPosition;
+        HoldingItemPosition.GlobalPosition = LowerHandPosition.GlobalPosition;
     }
 
     public override void Exit()
     {
         UpperCollision.Disabled = false;
-        Hand.GlobalPosition = UpperHandPosition.GlobalPosition;
+        HoldingItemPosition.GlobalPosition = UpperHandPosition.GlobalPosition;
     }
 
     public override void ApplyVelocity(double delta)

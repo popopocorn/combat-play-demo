@@ -19,7 +19,7 @@ public static class PlayerStateNames
     public static readonly StringName Fall = "Fall";
     public static readonly StringName SprintJump = "SprintJump";
 
-    public static readonly StringName LedgeClimb = "LedgeClimb";
+    public static readonly StringName LedgeGrab = "LedgeGrab";
 
     public static readonly StringName WallSlipper = "WallSlipper";
     public static readonly StringName WallJump = "WallJump";
