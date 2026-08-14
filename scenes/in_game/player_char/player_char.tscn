@@ -365,7 +365,6 @@ one_shot = true
 script = ExtResource("8_yk42j")
 DashDuration = NodePath("DashDuration")
 DashCooldown = NodePath("DashCooldown")
-CanExecuteAction = false
 
 [node name="DashDuration" type="Timer" parent="FSM/Dash" unique_id=202045892]
 process_callback = 0
@@ -389,14 +388,9 @@ process_callback = 0
 wait_time = 0.2
 one_shot = true
 
-[node name="SprintJump" type="Node" parent="FSM" unique_id=1088488716 node_paths=PackedStringArray("JumpDuration")]
+[node name="SprintJump" type="Node" parent="FSM" unique_id=1088488716]
 script = ExtResource("11_ynsr2")
-JumpDuration = NodePath("JumpDuration")
-
-[node name="JumpDuration" type="Timer" parent="FSM/SprintJump" unique_id=650451620]
-process_callback = 0
-wait_time = 0.4
-one_shot = true
+JumpDuration = 0.4
 
 [node name="Crouch" type="Node" parent="FSM" unique_id=143432291 node_paths=PackedStringArray("UpperCollision", "UpperHandPosition", "LowerHandPosition", "HoldingItemPosition")]
 script = ExtResource("12_stv0n")
@@ -627,7 +621,6 @@ metadata/_edit_use_anchors_ = true
 [connection signal="timeout" from="FSM/Dash/DashDuration" to="FSM/Dash" method="_on_dash_duration_timeout"]
 [connection signal="timeout" from="FSM/Dash/DashCooldown" to="FSM/Dash" method="_on_dash_cooldown_timeout"]
 [connection signal="timeout" from="FSM/Brake/BrakeDuration" to="FSM/Brake" method="_on_brake_duration_timeout"]
-[connection signal="timeout" from="FSM/SprintJump/JumpDuration" to="FSM/SprintJump" method="_on_jump_duration_timeout"]
 [connection signal="timeout" from="FSM/Spin/SpinDuration" to="FSM/Spin" method="_on_spin_duration_timeout"]
 [connection signal="timeout" from="FSM/Bash/BashDuration" to="FSM/Bash" method="_on_bash_duration_timeout"]
 [connection signal="timeout" from="FSM/LedgeGrab/LedgeGrabDuration" to="FSM/LedgeGrab" method="_on_ledge_grab_duration_timeout"]

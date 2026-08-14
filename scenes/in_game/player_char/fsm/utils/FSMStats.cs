@@ -19,11 +19,11 @@ public partial class FSMStats : Resource
     [Export]
     public float JumpSpeed { get; private set; }
     [Export]
-    public float JumpAccel { get; private set; }
-    [Export]
-    public float DecelSpeed { get; private set; }
+    public float JumpAccel_Y { get; private set; }
     [Export]
     public float MaxFallSpeed { get; private set; }
+    [Export]
+    public float SprintJumpAccel_X { get; private set; }
     [Export]
     public float MaxFallSpeedDuringSpin { get; private set; }
     [Export]

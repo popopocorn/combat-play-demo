@@ -31,7 +31,18 @@ public partial class Fall : PlayerState
 
     public override void ApplyVelocity(double delta)
     {
-        FSM.PlayerVelocity.X = FSM.InputAxis_X * FSM.Stats.WalkSpeed;
+        float targetVelocity = FSM.InputAxis_X * FSM.Stats.WalkSpeed;
+
+        if (Mathf.Abs(FSM.PlayerVelocity.X) > FSM.Stats.WalkSpeed)
+        {
+            FSM.PlayerVelocity.X = Mathf.MoveToward(FSM.PlayerVelocity.X, targetVelocity, (float)delta * FSM.Stats.SprintJumpAccel_X);
+        }
+        else
+        {
+            FSM.PlayerVelocity.X = FSM.InputAxis_X * FSM.Stats.WalkSpeed;
+        }
+
+
         FSM.PlayerVelocity.Y = Mathf.MoveToward(FSM.PlayerVelocity.Y, FSM.Stats.MaxFallSpeed, (float)delta * FSM.Player.GetGravity().Y);
 
         FSM.FacingDirection = FSM.LastInputAxis_X;
