@@ -36,14 +36,22 @@ public partial class Sprint : PlayerState
         {
             EmitSignalStateSwitchRequested(PlayerStateNames.Fall);
         }
+        else if (!Input.IsActionPressed(InputActionNames.Dash))
+        {
+            if (FSM.InputAxis_X == FSM.CurrentActionDirection)
+            {
+                EmitSignalStateSwitchRequested(PlayerStateNames.Walk);
+            }
+            else
+            {
+                EmitSignalStateSwitchRequested(PlayerStateNames.Idle);
+            }
+        }
         else if (FSM.InputAxis_X == -FSM.CurrentActionDirection)
         {
             EmitSignalStateSwitchRequested(PlayerStateNames.Brake);
         }
-        else if (!Input.IsActionPressed(InputActionNames.Dash))
-        {
-            EmitSignalStateSwitchRequested(PlayerStateNames.Brake);
-        }
+
     }
 
     public override void HandleInputEvent(InputEvent @event)
@@ -51,10 +59,6 @@ public partial class Sprint : PlayerState
         if (@event.IsActionPressed(InputActionNames.Jump))
         {
             EmitSignalStateSwitchRequested(PlayerStateNames.SprintJump);
-        }
-        else if (@event.IsActionReleased(InputActionNames.Dash))
-        {
-            EmitSignalStateSwitchRequested(PlayerStateNames.Brake);
         }
     }
 }

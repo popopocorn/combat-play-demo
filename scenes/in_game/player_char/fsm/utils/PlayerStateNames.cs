@@ -26,4 +26,7 @@ public static class PlayerStateNames
 
     public static readonly StringName Bash = "Bash";
     public static readonly StringName Spin = "Spin";
+
+    public static readonly StringName Glide = "Glide";
+    public static readonly StringName Attack = "Attack";
 }

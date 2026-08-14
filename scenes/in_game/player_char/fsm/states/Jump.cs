@@ -28,7 +28,7 @@ public partial class Jump : PlayerState
     public override void ApplyVelocity(double delta)
     {
         FSM.PlayerVelocity.X = FSM.InputAxis_X * FSM.Stats.WalkSpeed;
-        FSM.PlayerVelocity.Y = Mathf.MoveToward(FSM.PlayerVelocity.Y, FSM.Stats.MaxFallSpeed, (float)delta * FSM.Stats.JumpAccel);
+        FSM.PlayerVelocity.Y = Mathf.MoveToward(FSM.PlayerVelocity.Y, FSM.Stats.MaxFallSpeed, (float)delta * FSM.Stats.JumpAccel_Y);
 
         FSM.FacingDirection = FSM.LastInputAxis_X;
     }

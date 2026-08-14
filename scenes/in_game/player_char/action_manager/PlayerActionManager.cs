@@ -89,6 +89,10 @@ public partial class PlayerActionManager : Node2D
                 CurrentAction.ActivateHurtBox();
                 StartAfterCastDelay(0.4f);
             }
+            if (Player.IsOnFloor())
+            {
+                FSM.SwitchState(PlayerStateNames.Attack);
+            }
         }
     }
 

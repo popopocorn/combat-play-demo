@@ -21,4 +21,16 @@ public static class PlayerState_Utils
             state.EmitSignal(PlayerState.SignalName.StateSwitchRequested, PlayerStateNames.Walk);
         }
     }
+
+    public static Timer AddTimerToState(this PlayerState state, float duration)
+    {
+        Timer timer = new();
+        timer.ProcessCallback = Timer.TimerProcessCallback.Physics;
+        timer.WaitTime = duration;
+        timer.OneShot = true;
+        timer.Autostart = false;
+        state.AddChild(timer);
+
+        return timer;
+    }
 }
