@@ -21,7 +21,9 @@ public partial class Bash : PlayerState
 
     public override void ApplyVelocity(double delta)
     {
-        FSM.PlayerVelocity = Vector2.Down;
+        FSM.PlayerVelocity.X = Mathf.MoveToward(FSM.PlayerVelocity.X, 0.0f, (float)delta * FSM.Stats.AttackAccel_X);
+
+        FSM.PlayerVelocity.Y = 1.0f;
     }
     
     public override void CheckIfSwitchState(double delta)

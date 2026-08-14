@@ -24,8 +24,7 @@ public partial class Brake : PlayerState
 
     public override void ApplyVelocity(double delta)
     {
-        FSM.PlayerVelocity.X = FSM.CurrentActionDirection * FSM.Stats.DecelSpeed;
-        FSM.PlayerVelocity.Y = 1.0f;
+        FSM.PlayerVelocity = Vector2.Zero;
 
         FSM.FacingDirection = FSM.CurrentActionDirection;
     }

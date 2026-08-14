@@ -23,6 +23,8 @@
 [ext_resource type="Script" uid="uid://c1jd07drqp365" path="res://scenes/in_game/player_char/fsm/states/WallSlipper.cs" id="16_qngxf"]
 [ext_resource type="Texture2D" uid="uid://b6aawcptf282t" path="res://resources/vfx/player/bash_vfx_temp.png" id="17_stv0n"]
 [ext_resource type="Script" uid="uid://e6ea2a4hyk8x" path="res://scenes/in_game/player_char/fsm/states/WallJump.cs" id="17_yk00u"]
+[ext_resource type="Script" uid="uid://71mp8t4ni3vp" path="res://scenes/in_game/player_char/fsm/states/Glide.cs" id="18_2nld2"]
+[ext_resource type="Script" uid="uid://42r1ex836ycn" path="res://scenes/in_game/player_char/fsm/states/Attack.cs" id="19_2s2qw"]
 [ext_resource type="Texture2D" uid="uid://xxsxyi5wcb1e" path="res://resources/vfx/player/spin_vfx_temp.png" id="19_kbw3p"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qetm4"]
@@ -450,6 +452,16 @@ one_shot = true
 process_callback = 0
 wait_time = 0.4
 one_shot = true
+
+[node name="Glide" type="Node" parent="FSM" unique_id=144107627 node_paths=PackedStringArray("LedgeRay")]
+script = ExtResource("18_2nld2")
+LedgeRay = NodePath("../../ActionManager/NodeToFlipX/RayCast2D")
+
+[node name="Attack" type="Node" parent="FSM" unique_id=1169161265]
+script = ExtResource("19_2s2qw")
+AttackDuration = 0.3
+MoveDuration = 0.2
+CanExecuteAction = false
 
 [node name="ActionManager" type="Node2D" parent="." unique_id=274473084 node_paths=PackedStringArray("Player", "FSM", "AfterCastDelayTimer", "Slash", "Bash", "Spin", "PickUpArea", "HoldingItemPosition", "NodeToFlip")]
 script = ExtResource("12_qetm4")

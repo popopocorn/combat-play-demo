@@ -1,45 +1,38 @@
 namespace Game.Player.FSM;
 
 using BitterCitrus.SRC.Core.BInput;
-using Game.Player.Actions;
 using Godot;
 using System;
-using System.Collections.Generic;
 
-
-public partial class Fall : PlayerState
+public partial class Glide : PlayerState
 {
     [Export] private RayCast2D LedgeRay { get; set; }
-    List<StringName> groundedStates = new List<StringName>
-    {
-        PlayerStateNames.Idle,
-        PlayerStateNames.Walk,
-    };
 
     public override void Enter()
     {
-        if (groundedStates.Contains(FSM.PrevStateName))
-        {
-            FSM.CreateKoyoteTime();
-        }
+        
     }
 
     public override void Exit()
     {
-        FSM.ConsumeKoyoteTime();
+        
     }
 
     public override void ApplyVelocity(double delta)
     {
         FSM.PlayerVelocity.X = FSM.InputAxis_X * FSM.Stats.WalkSpeed;
-        FSM.PlayerVelocity.Y = Mathf.MoveToward(FSM.PlayerVelocity.Y, FSM.Stats.MaxFallSpeed, (float)delta * FSM.Player.GetGravity().Y);
+        FSM.PlayerVelocity.Y = Mathf.MoveToward(FSM.PlayerVelocity.Y, FSM.Stats.MaxFallSpeedDuringGlide, (float)delta * FSM.Player.GetGravity().Y);
+        
+        if (FSM.PlayerVelocity.Y > FSM.Stats.MaxFallSpeedDuringGlide)
+        {
+            FSM.PlayerVelocity.Y = FSM.Stats.MaxFallSpeedDuringGlide;
+        }
 
         FSM.FacingDirection = FSM.LastInputAxis_X;
     }
-    
+
     public override void CheckIfSwitchState(double delta)
     {
-        GD.Print($"{FSM.Player.GetWallNormal()}, {FSM.InputAxis_X}");
         if (FSM.Player.IsOnFloor())
         {
             this.SwitchStateToIdleOrWalk();
@@ -55,20 +48,17 @@ public partial class Fall : PlayerState
         {
             EmitSignalStateSwitchRequested(PlayerStateNames.WallSlipper);
         }
+        else if (!Input.IsActionPressed(InputActionNames.Jump))
+        {
+            EmitSignalStateSwitchRequested(PlayerStateNames.Fall);
+        }
     }
 
     public override void HandleInputEvent(InputEvent @event)
     {
-        if (@event.IsActionPressed(InputActionNames.Jump))
+        if (@event.IsActionReleased(InputActionNames.Jump))
         {
-            if (FSM.CanKoyoteJump)
-            {
-                EmitSignalStateSwitchRequested(PlayerStateNames.Jump);
-            }
-            else
-            {
-                EmitSignalStateSwitchRequested(PlayerStateNames.Glide);
-            }
+            EmitSignalStateSwitchRequested(PlayerStateNames.Fall);
         }
     }
 }
